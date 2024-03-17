@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Banks } from './bank/models/bank.entity';
 import { PhysicalUsers } from './physicaluser/models/physical-user.entity';
+import { PlasticCard } from './plasticcard/models/plastic-card.entity';
 
 
 
@@ -17,7 +18,7 @@ import { PhysicalUsers } from './physicaluser/models/physical-user.entity';
       username: 'criminalist',
       password: 'criminalist',
       database: 'bankdb',
-      entities: [Banks],
+      entities: [],
       synchronize: true,
     }),
     TypeOrmModule.forRoot({
@@ -28,7 +29,7 @@ import { PhysicalUsers } from './physicaluser/models/physical-user.entity';
       username: 'criminalist',
       password: 'criminalist',
       database: 'userdb',
-      entities: [PhysicalUsers],
+      entities: [PhysicalUsers,PlasticCard,Banks],
       synchronize: true,
     })
   ],
