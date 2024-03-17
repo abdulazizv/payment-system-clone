@@ -7,7 +7,7 @@ export enum CreditCardsEnum {
 }
 
 export enum TypePlasticCardEnum {
-    Uzcard = '8600',
-    Humo = '9860',
-    Mir = '5614'
+    Uzcard = 'Uzcard',
+    Humo = 'Humo',
+    Mir = 'Mir'
 }

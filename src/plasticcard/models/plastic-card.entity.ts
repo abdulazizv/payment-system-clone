@@ -1,4 +1,4 @@
-import { Entity,PrimaryGeneratedColumn,Column, OneToMany, ManyToOne } from "typeorm";
+import { Entity,PrimaryGeneratedColumn,Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { string } from "yargs";
 import { TypePlasticCardEnum } from "src/utils/credit-cards.enum";
@@ -14,6 +14,10 @@ export class PlasticCard {
     @Column({type: Date,nullable: false})
     valid_date: Date;
 
+    @ApiProperty()
+    @Column()
+    card_number: string;
+
     @ApiProperty({description: 'bank id'})
     @Column()
     bank_id: number;
@@ -27,14 +31,18 @@ export class PlasticCard {
     type_card: TypePlasticCardEnum;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     password: number;
 
     @ApiProperty()
-    @Column({type: 'numeric',precision: 10,scale: 2})
+    @Column({type: 'numeric',precision: 10,scale: 2,nullable: true})
     amount: number;
 
-    @Column({type: Boolean,default: false})
+    @ApiProperty()
+    @Column()
+    phone_number: string;
+    
+    @Column()
     status: boolean;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
@@ -44,8 +52,10 @@ export class PlasticCard {
     updated_at: Date;
 
     @ManyToOne(() => PhysicalUsers)
+    @JoinColumn({name: 'user_id'})
     user: PhysicalUsers;
 
     @ManyToOne(() => Banks)
+    @JoinColumn({ name: 'bank_id'})
     banks: Banks;
 }

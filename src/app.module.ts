@@ -6,6 +6,9 @@ import { AppService } from './app.service';
 import { Banks } from './bank/models/bank.entity';
 import { PhysicalUsers } from './physicaluser/models/physical-user.entity';
 import { PlasticCard } from './plasticcard/models/plastic-card.entity';
+import { BanksModule } from './bank/bank.module';
+import { PhysicalUserModule } from './physicaluser/physical-user.module';
+import { PlasticCardModule } from './plasticcard/plastic-card.module';
 
 
 
@@ -31,7 +34,10 @@ import { PlasticCard } from './plasticcard/models/plastic-card.entity';
       database: 'userdb',
       entities: [PhysicalUsers,PlasticCard,Banks],
       synchronize: true,
-    })
+    }),
+    BanksModule,
+    PhysicalUserModule,
+    PlasticCardModule
   ],
   controllers: [AppController],
   providers: [AppService],
