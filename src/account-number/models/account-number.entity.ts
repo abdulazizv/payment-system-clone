@@ -32,10 +32,6 @@ export class AccountNumber {
     @JoinColumn({name: 'user_id'})
     user: LegalUsers;
 
-    @ManyToOne(() => Banks)
-    @JoinColumn({ name: 'bank_id'})
-    banks: Banks;
-
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 

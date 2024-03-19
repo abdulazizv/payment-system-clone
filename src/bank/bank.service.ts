@@ -9,7 +9,7 @@ import { UpdateBankDto } from "./dto/update-bank.dto";
 export class BankService {
 
     constructor(
-        @InjectRepository(Banks,'connection2')
+        @InjectRepository(Banks)
         private readonly bankRepository: Repository<Banks>
     ) {}
 

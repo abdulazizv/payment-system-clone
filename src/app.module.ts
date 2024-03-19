@@ -9,6 +9,10 @@ import { PlasticCard } from './plasticcard/models/plastic-card.entity';
 import { BanksModule } from './bank/bank.module';
 import { PhysicalUserModule } from './physicaluser/physical-user.module';
 import { PlasticCardModule } from './plasticcard/plastic-card.module';
+import { LegalUsersModule } from './legaluser/legal-user.module';
+import { LegalUsers } from './legaluser/models/legal-user.entity';
+import { AccountNumberModule } from './account-number/account-number.module';
+import { AccountNumber } from './account-number/models/account-number.entity';
 
 
 
@@ -21,7 +25,7 @@ import { PlasticCardModule } from './plasticcard/plastic-card.module';
       username: 'criminalist',
       password: 'criminalist',
       database: 'bankdb',
-      entities: [],
+      entities: [Banks],
       synchronize: true,
     }),
     TypeOrmModule.forRoot({
@@ -32,12 +36,14 @@ import { PlasticCardModule } from './plasticcard/plastic-card.module';
       username: 'criminalist',
       password: 'criminalist',
       database: 'userdb',
-      entities: [PhysicalUsers,PlasticCard,Banks],
+      entities: [PhysicalUsers,PlasticCard,LegalUsers,AccountNumber],
       synchronize: true,
     }),
     BanksModule,
     PhysicalUserModule,
-    PlasticCardModule
+    PlasticCardModule,
+    LegalUsersModule,
+    AccountNumberModule
   ],
   controllers: [AppController],
   providers: [AppService],

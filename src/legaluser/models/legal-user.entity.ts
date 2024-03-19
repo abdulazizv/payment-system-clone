@@ -15,6 +15,14 @@ export class LegalUsers {
     @Column()
     full_name: string;
 
+    @ApiProperty({example: '998900249424'})
+    @Column()
+    phone: string;
+
+    @ApiProperty({ example: 'nodirbek@gmail.com' })
+    @Column()
+    email: string;
+
     @ApiProperty({ example: 'AA213123' })
     @Column({ unique: true })
     passport: string;

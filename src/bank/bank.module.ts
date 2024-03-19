@@ -5,7 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { BankController } from "./bank.controller";
 @Module({
     imports:[
-        TypeOrmModule.forFeature([Banks],'connection2')
+        TypeOrmModule.forFeature([Banks])
     ],
     controllers: [BankController],
     providers: [BankService],

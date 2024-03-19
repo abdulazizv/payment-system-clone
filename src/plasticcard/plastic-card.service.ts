@@ -10,13 +10,15 @@ import * as randomize from 'randomatic';
 import { UpdatePasswordCardDto } from "./dto/update-password.card.dto";
 import { PhysicalUserService } from "src/physicaluser/physical-user.service";
 import { CreatePhysicalUserDto } from "src/physicaluser/dto/create-physical-user.dto";
+import { BankService } from "src/bank/bank.service";
 
 @Injectable()
 export class PlasticCardService {
     constructor(
         @InjectRepository(PlasticCard,'connection2')
         private readonly plasticCardRepository: Repository<PlasticCard>,
-        private readonly physicalUserService: PhysicalUserService
+        private readonly physicalUserService: PhysicalUserService,
+        private readonly bankService: BankService
     ) { }
 
     async createPlasticCard(params: CreatePlasticCardDto) {
@@ -119,21 +121,28 @@ export class PlasticCardService {
     }
 
     async findPlasticCardById(id: number): Promise<PlasticCard> {
-        return this.plasticCardRepository
+        const data:any = await this.plasticCardRepository
         .createQueryBuilder('plastic_card')
         .leftJoinAndSelect('plastic_card.user', 'user')
-        .leftJoinAndSelect('plastic_card.banks', 'banks')
         .where('plastic_card.id = :id', { id })
         .getOne();
+
+        data.bank = await this.bankService.findBankById(data.bank_id);
+
+        return data;
     }
     
     async findPlasticCardsByUserId(user_id: number) {
-        return this.plasticCardRepository
+        const data:any = await this.plasticCardRepository
         .createQueryBuilder('plastic_card')
         .leftJoinAndSelect('plastic_card.user', 'user')
-        .leftJoinAndSelect('plastic_card.banks', 'banks')
         .where('plastic_card.user_id = :user_id', { user_id })
         .getMany();
+
+        for (let x of data) {
+            x.bank = await this.bankService.findBankById(x.bank_id)
+        }
+        return data;
     }
 
     async updatePlasticCard(id: number,params: UpdatePlasticCardDto) {

@@ -7,13 +7,16 @@ import { CreateLegalUserDto } from './dto/create-legal-user.dto';
 @Injectable()
 export class LegalUsersService {
     constructor(
-        @InjectRepository(LegalUsers)
+        @InjectRepository(LegalUsers,'connection2')
         private readonly legalUsersRepository: Repository<LegalUsers>,
     ) {}
 
     async createLegalUser(createLegalUserDto: CreateLegalUserDto): Promise<LegalUsers> {
-        const newLegalUser = this.legalUsersRepository.create(createLegalUserDto);
-        return this.legalUsersRepository.save(newLegalUser);
+        try {
+            return this.legalUsersRepository.save(createLegalUserDto)
+        } catch(e) {
+            console.log(e)
+        }
     }
 
     async findAllLegalUsers(): Promise<LegalUsers[]> {

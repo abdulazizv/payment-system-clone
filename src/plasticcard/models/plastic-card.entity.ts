@@ -39,9 +39,9 @@ export class PlasticCard {
     amount: number;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     phone_number: string;
-    
+
     @Column()
     status: boolean;
 
@@ -54,8 +54,4 @@ export class PlasticCard {
     @ManyToOne(() => PhysicalUsers)
     @JoinColumn({name: 'user_id'})
     user: PhysicalUsers;
-
-    @ManyToOne(() => Banks)
-    @JoinColumn({ name: 'bank_id'})
-    banks: Banks;
 }

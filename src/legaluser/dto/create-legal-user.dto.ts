@@ -16,4 +16,14 @@ export class CreateLegalUserDto {
     @IsNotEmpty()
     @IsAlphanumeric()
     passport: string;
+
+    @ApiProperty({ example: '998900249424',description: 'phone of CEO'})
+    @IsNotEmpty()
+    @IsString()
+    phone: string;
+
+    @ApiProperty({ example: 'usernamenodirbek@gmail.com',description: 'email of user'})
+    @IsNotEmpty()
+    @IsString()
+    email: string;
 }

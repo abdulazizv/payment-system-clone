@@ -1,46 +1,41 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { AccountNumber } from "./models/account-number.entity";
-import { Repository } from "typeorm";
-import { CreateAccountNumberUserDto } from "./dto/create-account-number-user.dto";
-import { LegalUsersService } from "src/legaluser/legal-user.service";
-import { CreateLegalUserDto } from "src/legaluser/dto/create-legal-user.dto";
-import * as randomize from 'randomatic';
-@Injectable()
+import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
+import { ApiTags, ApiResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { AccountNumberService } from './account-number.service';
+import { CreateAccountNumberUserDto } from './dto/create-account-number-user.dto';
+import { AccountNumber } from './models/account-number.entity';
+import { CreateAccountNumberDto } from './dto/create-account-number.dto';
 
-export class AccountNumberService {
-    constructor(
-        @InjectRepository(AccountNumber,'connection2')
-        private readonly accountNumberRepository: Repository<AccountNumber>,
-        private readonly userService: LegalUsersService
-    ) {}
+@ApiTags('Account Numbers')
+@Controller('account-numbers')
+export class AccountNumberController {
+    constructor(private readonly accountNumberService: AccountNumberService) {}
 
-    async createAccountNumber(params: CreateAccountNumberUserDto) {
-        const user_params: CreateLegalUserDto = {
-            company_name: params.company_name,
-            full_name: params.full_name,
-            passport: params.passport
+    @Post()
+    @ApiResponse({ status: 201, description: 'Account number created successfully.', type: AccountNumber })
+    @ApiBadRequestResponse({ description: 'Invalid input data.' })
+    async createAccountNumber(
+        @Body() createAccountNumberUserDto: CreateAccountNumberUserDto,
+    ): Promise<AccountNumber> {
+        try {
+            const accountNumber = await this.accountNumberService.createAccountNumber(createAccountNumberUserDto);
+            return accountNumber;
+        } catch (error) {
+            console.log(error)
+            throw new HttpException('Error creating account number', HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
-        const user = await this.userService.createLegalUser(user_params);
-    
-        if(!user?.id) {
-            throw new HttpException(
-                'Error on create user',
-                HttpStatus.INTERNAL_SERVER_ERROR
-            )
+    @Post('user')
+    @ApiResponse({ status: 201, description: 'Account number created successfully.', type: AccountNumber })
+    @ApiBadRequestResponse({ description: 'Invalid input data.' })
+    async createAccountNumberUser(
+        @Body() createAccountNumberDto: CreateAccountNumberDto,
+    ): Promise<AccountNumber> {
+        try {
+            const accountNumber = await this.accountNumberService.createAccountNumberUser(createAccountNumberDto);
+            return accountNumber;
+        } catch (error) {
+            throw new HttpException('Error creating account number', HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        const account_number = randomize('0',20);
-
-        const new_data = this.accountNumberRepository.create({
-            ...params,
-            user_id: user.id,
-            account_number
-        })
-
-        const data = await this.accountNumberRepository.save(new_data);
-
-        return data;
     }
 }
