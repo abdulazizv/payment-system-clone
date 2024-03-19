@@ -20,7 +20,7 @@ export class LegalUsers {
     phone: string;
 
     @ApiProperty({ example: 'nodirbek@gmail.com' })
-    @Column()
+    @Column({nullable: true})
     email: string;
 
     @ApiProperty({ example: 'AA213123' })

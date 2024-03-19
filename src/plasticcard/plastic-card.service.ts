@@ -121,12 +121,13 @@ export class PlasticCardService {
     }
 
     async findPlasticCardById(id: number): Promise<PlasticCard> {
-        const data:any = await this.plasticCardRepository
-        .createQueryBuilder('plastic_card')
-        .leftJoinAndSelect('plastic_card.user', 'user')
-        .where('plastic_card.id = :id', { id })
-        .getOne();
+        const data: any = await this.plasticCardRepository
+            .createQueryBuilder('plastic_card')
+            .leftJoinAndSelect('plastic_card.user', 'user')
+            .where('plastic_card.id = :id', { id })
+            .getOne();
 
+        
         data.bank = await this.bankService.findBankById(data.bank_id);
 
         return data;
@@ -142,6 +143,7 @@ export class PlasticCardService {
         for (let x of data) {
             x.bank = await this.bankService.findBankById(x.bank_id)
         }
+        
         return data;
     }
 
@@ -160,4 +162,49 @@ export class PlasticCardService {
         return deleteResult.affected > 0;
     }
 
+    async getUserByPlasticCard(card_number: string) {
+        const data:any = await this.plasticCardRepository
+                    .createQueryBuilder('plastic_card')
+                    .leftJoinAndSelect('plastic_card.user','user')
+                    .where('plastic_card.card_number = :card_number', { card_number })
+                    .getOne()        
+   
+        data.bank = await this.bankService.findBankById(data.bank_id);
+
+        return data;
+    }         
+
+    async addMoneyToAmount(card_number: string,new_amount: string) {
+        const entity = await this.plasticCardRepository.findOne({ where : { card_number }});
+
+        if(!entity) {
+            throw new HttpException(
+                'Plastic card not found',
+                HttpStatus.NOT_FOUND
+            )
+        }
+
+        entity.amount += Number(new_amount);
+
+        const data = await this.plasticCardRepository.save(entity);
+
+        return data;
+    }
+
+    async takeMoneyFromAmount(card_number: string,new_amount: string | any) {
+        const entity = await this.plasticCardRepository.findOne({ where : { card_number }});
+
+        if(!entity) {
+            throw new HttpException(
+                'Plastic card not found',
+                HttpStatus.NOT_FOUND
+            )
+        }
+
+        entity.amount -= Number(new_amount);
+
+        const data = await this.plasticCardRepository.save(entity);
+
+        return data;
+    }
 }

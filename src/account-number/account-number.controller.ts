@@ -1,5 +1,5 @@
-import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { Controller, Post, Body, HttpException, HttpStatus, Get, Param, Patch, Delete } from '@nestjs/common';
+import { ApiTags, ApiResponse, ApiBadRequestResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { AccountNumberService } from './account-number.service';
 import { CreateAccountNumberUserDto } from './dto/create-account-number-user.dto';
 import { AccountNumber } from './models/account-number.entity';
@@ -38,4 +38,35 @@ export class AccountNumberController {
             throw new HttpException('Error creating account number', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Get()
+    @ApiResponse({ status: 200, description: 'Retrieve all account numbers.', type: [AccountNumber] })
+    async findAll(): Promise<AccountNumber[]> {
+        return this.accountNumberService.findAll();
+    }
+
+    @Get(':id')
+    @ApiResponse({ status: 200, description: 'Retrieve account number by ID.', type: AccountNumber })
+    @ApiNotFoundResponse({ description: 'Account number not found.' })
+    async findById(@Param('id') id: number): Promise<AccountNumber> {
+        return this.accountNumberService.findById(id);
+    }
+
+    @Patch(':id')
+    @ApiResponse({ status: 200, description: 'Account number updated successfully.', type: AccountNumber })
+    @ApiNotFoundResponse({ description: 'Account number not found.' })
+    async update(
+        @Param('id') id: number,
+        @Body() updateAccountNumberDto: CreateAccountNumberDto,
+    ): Promise<AccountNumber> {
+        return this.accountNumberService.update(id, updateAccountNumberDto);
+    }
+
+    @Delete(':id')
+    @ApiResponse({ status: 200, description: 'Account number deleted successfully.' })
+    @ApiNotFoundResponse({ description: 'Account number not found.' })
+    async delete(@Param('id') id: number): Promise<void> {
+        return this.accountNumberService.delete(id);
+    }
+
 }

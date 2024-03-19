@@ -7,6 +7,7 @@ import { LegalUsersService } from "src/legaluser/legal-user.service";
 import { CreateLegalUserDto } from "src/legaluser/dto/create-legal-user.dto";
 import * as randomize from 'randomatic';
 import { CreateAccountNumberDto } from "./dto/create-account-number.dto";
+import { BankService } from "src/bank/bank.service";
 
 @Injectable()
 
@@ -14,7 +15,8 @@ export class AccountNumberService {
     constructor(
         @InjectRepository(AccountNumber,'connection2')
         private readonly accountNumberRepository: Repository<AccountNumber>,
-        private readonly userService: LegalUsersService
+        private readonly userService: LegalUsersService,
+        private readonly bankService: BankService
     ) {}
 
     async createAccountNumber(params: CreateAccountNumberUserDto) {
@@ -92,4 +94,18 @@ export class AccountNumberService {
         }
         await this.accountNumberRepository.delete(id);
     }
+
+
+    private async getUserByAccountNumber(account_number: string) {
+        const data:any = await this.accountNumberRepository
+                    .createQueryBuilder('account_number')
+                    .leftJoinAndSelect('account_number.user','user')
+                    .where('account_number.account_number = :account_number', { account_number })
+                    .getOne()        
+   
+        data.bank = await this.bankService.findBankById(data.bank_id);
+
+        return data;
+    }           
+
 }

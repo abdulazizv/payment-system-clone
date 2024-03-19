@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConnectionOptions } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Banks } from './bank/models/bank.entity';
@@ -13,6 +12,8 @@ import { LegalUsersModule } from './legaluser/legal-user.module';
 import { LegalUsers } from './legaluser/models/legal-user.entity';
 import { AccountNumberModule } from './account-number/account-number.module';
 import { AccountNumber } from './account-number/models/account-number.entity';
+import { Transaction } from './transaction/models/transaction.entity';
+import { TransactionModule } from './transaction/transaction.module';
 
 
 
@@ -36,14 +37,15 @@ import { AccountNumber } from './account-number/models/account-number.entity';
       username: 'criminalist',
       password: 'criminalist',
       database: 'userdb',
-      entities: [PhysicalUsers,PlasticCard,LegalUsers,AccountNumber],
+      entities: [PhysicalUsers,PlasticCard,LegalUsers,AccountNumber,Transaction],
       synchronize: true,
     }),
     BanksModule,
     PhysicalUserModule,
     PlasticCardModule,
     LegalUsersModule,
-    AccountNumberModule
+    AccountNumberModule,
+    TransactionModule
   ],
   controllers: [AppController],
   providers: [AppService],

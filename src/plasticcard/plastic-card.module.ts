@@ -11,7 +11,8 @@ import { BanksModule } from "src/bank/bank.module";
         TypeOrmModule.forFeature([PlasticCard],'connection2'),PhysicalUserModule,BanksModule
     ],
     controllers: [PlasticCardController],
-    providers: [PlasticCardService]
+    providers: [PlasticCardService],
+    exports: [PlasticCardService]
 })
 
 export class PlasticCardModule {}
